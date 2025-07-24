@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -35,7 +36,7 @@ public class Circle {
     private String country;
 
     @Column(name = "monthly_contribution")
-    private Long monthlyPayout;
+    private Long monthlyContribution;
 
     @Column(name = "max_members")
     private Integer maxMembers;
@@ -46,4 +47,10 @@ public class Circle {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shark_id")
+    private User shark;
+
+    @ManyToMany(mappedBy = "circles")
+    private Set<User> members;
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -48,11 +49,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-
     @Column(name = "kyc_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status kycStatus;
-
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -68,4 +67,14 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     private SharkProfile sharkProfile;
+
+    @OneToOne(mappedBy = "shark")
+    private Circle sharkCircle;
+
+    @ManyToMany
+    @JoinTable(
+            name = "circle_membership",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "circle_id"))
+    private Set<Circle> circles;
 }
