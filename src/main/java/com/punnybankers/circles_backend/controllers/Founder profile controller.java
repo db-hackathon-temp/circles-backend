@@ -16,4 +16,10 @@ public class FounderProfileController {
         FounderProfile created = founderProfileService.createFounderProfile(request);
         return ResponseEntity.ok(created);
     }
+  @GetMapping("/{user_id}")
+public ResponseEntity<FounderProfile> getFounderProfile(@PathVariable UUID id) {
+    FounderProfile profile = founderProfileService.getFounderProfileById(id);
+    return ResponseEntity.ok(profile);
+}
+
 }

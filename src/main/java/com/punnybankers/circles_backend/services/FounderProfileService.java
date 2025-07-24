@@ -29,4 +29,10 @@ public class FounderProfileService {
 
         return founderRepo.save(profile);
     }
+    public FounderProfile getFounderProfileById(UUID id) {
+    return founderProfileRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Founder not found with id: " + id));
+}
+
+
 }
