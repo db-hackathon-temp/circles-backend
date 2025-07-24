@@ -1,0 +1,13 @@
+package com.punnybankers.circles_backend;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CirclesBackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CirclesBackendApplication.class, args);
+	}
+
+}
