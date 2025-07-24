@@ -1,5 +1,14 @@
+package com.punnybankers.circles_backend.services;
+
+import com.punnybankers.circles_backend.models.FounderProfileRequest;
+import com.punnybankers.circles_backend.repositories.FounderProfileRepository;
+import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.repositories.entities.FounderProfile;
+import com.punnybankers.circles_backend.repositories.entities.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 public class FounderProfileService {

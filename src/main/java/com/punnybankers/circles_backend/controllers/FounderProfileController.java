@@ -1,3 +1,8 @@
+package com.punnybankers.circles_backend.controllers;
+
+import com.punnybankers.circles_backend.models.FounderProfileRequest;
+import com.punnybankers.circles_backend.repositories.entities.FounderProfile;
+import com.punnybankers.circles_backend.services.FounderProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

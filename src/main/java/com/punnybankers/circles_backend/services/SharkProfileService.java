@@ -1,5 +1,14 @@
+package com.punnybankers.circles_backend.services;
+
+import com.punnybankers.circles_backend.models.SharkProfileRequest;
+import com.punnybankers.circles_backend.repositories.SharkProfileRepository;
+import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.repositories.entities.SharkProfile;
+import com.punnybankers.circles_backend.repositories.entities.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 public class SharkProfileService {

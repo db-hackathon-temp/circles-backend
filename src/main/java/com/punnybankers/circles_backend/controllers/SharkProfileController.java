@@ -1,3 +1,8 @@
+package com.punnybankers.circles_backend.controllers;
+
+import com.punnybankers.circles_backend.models.SharkProfileRequest;
+import com.punnybankers.circles_backend.repositories.entities.SharkProfile;
+import com.punnybankers.circles_backend.services.SharkProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,3 +1,10 @@
+package com.punnybankers.circles_backend.models;
+
+import lombok.Data;
+
+import java.util.UUID;
+
+@Data
 public class SharkProfileRequest {
     private UUID userId;
     private Long monthlyCommitment;
