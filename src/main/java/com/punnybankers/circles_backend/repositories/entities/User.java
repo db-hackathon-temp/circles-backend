@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -76,5 +77,5 @@ public class User {
             name = "circle_membership",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "circle_id"))
-    private Set<Circle> circles;
+    private Set<Circle> circles = new HashSet<>();
 }

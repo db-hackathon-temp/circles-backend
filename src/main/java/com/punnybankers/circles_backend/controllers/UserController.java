@@ -21,23 +21,29 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-//        Optional<User> user = authService.authenticate(username, password);
-        Optional<User> user = userService.findByUsername(username);
-        if (user.isPresent()) {
-            String token = jwtUtil.generateToken(user.get());
-            return ResponseEntity.ok().body(token);
-        }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        User user = userService.authenticateUser(username, password);
+        String token = jwtUtil.generateToken(user);
+        return ResponseEntity.ok().body(token);
     }
 
     @GetMapping("/user-details")
     public ResponseEntity<?> getUserDetails(@RequestHeader("Authorization") String token) {
-//        if (jwtUtil.validateToken(token)) {
-//            String username = jwtUtil.extractUsername(token);
-//            Optional<User> user = userService.findByUsername(username);
-//            return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(404).body("User not found"));
-//        }
+        String username = getUsername(token);
+        if (username != null) {
+            User user = userService.findByUsername(username);
+            return ResponseEntity.ok(user);
+        }
         return ResponseEntity.status(401).body("Invalid or expired token");
     }
+
+    private String getUsername(String token) {
+        if (jwtUtil.validateToken(token)) {
+            return jwtUtil.extractUsername(token);
+        } else {
+            return null;
+        }
+    }
+
+
 }
 

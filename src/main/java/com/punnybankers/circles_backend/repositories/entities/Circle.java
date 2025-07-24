@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -52,5 +53,5 @@ public class Circle {
     private User shark;
 
     @ManyToMany(mappedBy = "circles")
-    private Set<User> members;
+    private Set<User> members = new HashSet<>();
 }
