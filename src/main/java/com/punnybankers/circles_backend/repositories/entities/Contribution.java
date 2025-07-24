@@ -31,8 +31,8 @@ public class Contribution {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "month")
-    private Month month;
+    @Column(name = "contribution_month")
+    private Month contributionMonth;
 
     @Column(name = "amount")
     private Long amount;

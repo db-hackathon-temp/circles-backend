@@ -76,7 +76,7 @@ public class CircleService {
             if (circle.isPresent()) {
                 Contribution contribution = Contribution.builder()
                         .circle(circle.get())
-                        .month(LocalDateTime.now().getMonth())
+                        .contributionMonth(LocalDateTime.now().getMonth())
                         .amount(circle.get().getMonthlyContribution())
                         .payoutDate(LocalDateTime.now())
                         .status("Paid")
