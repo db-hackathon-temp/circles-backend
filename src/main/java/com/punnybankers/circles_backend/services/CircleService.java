@@ -1,8 +1,11 @@
 package com.punnybankers.circles_backend.services;
 
 
+import com.punnybankers.circles_backend.controllers.UserController;
+import com.punnybankers.circles_backend.models.CircleRequest;
 import com.punnybankers.circles_backend.repositories.CircleRepository;
 import com.punnybankers.circles_backend.repositories.ContributionRepository;
+import com.punnybankers.circles_backend.repositories.UserRepository;
 import com.punnybankers.circles_backend.repositories.entities.Circle;
 import com.punnybankers.circles_backend.repositories.entities.Contribution;
 import com.punnybankers.circles_backend.repositories.entities.User;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +29,46 @@ public class CircleService {
     @Autowired
     private ContributionRepository contributionRepository;
 
+    @Autowired
+    private UserController userController;
 
+    @Autowired
+    private UserRepository userRepo;
+
+    public List<Circle> getAllCirclesByToken(String token) {
+        String username = userController.getUsername(token);
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new ArrayList<>(user.getCircles());
+    }
+
+    public Circle createCircle(CircleRequest request) {
+        String username = userController.getUsername(request.getCreatedByToken());
+        User createdByUser = userRepo.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        User sharkUser = null;
+        if (request.getSharkId() != null) {
+            sharkUser = userService.findById(request.getSharkId())
+                    .orElseThrow(() -> new RuntimeException("Shark user not found"));
+        }
+
+        Circle circle = Circle.builder()
+                .id(UUID.randomUUID())
+                .name(request.getName())
+                .industry(request.getIndustry())
+                .country(request.getCountry())
+                .monthlyContribution(request.getMonthlyContribution())
+                .maxMembers(request.getMaxMembers())
+                .createdBy(createdByUser)
+                .shark(sharkUser)
+                .status("ACTIVE")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return circleRepository.save(circle);
+    }
 
     public Optional<Circle> findById(UUID circleId) {
         return circleRepository.findById(circleId);
