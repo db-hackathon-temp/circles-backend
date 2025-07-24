@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface CircleRepository extends JpaRepository<UUID, Circle> {
+public interface CircleRepository extends JpaRepository<Circle, UUID> {
 }
