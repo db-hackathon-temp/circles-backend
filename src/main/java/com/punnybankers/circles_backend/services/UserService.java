@@ -1,11 +1,15 @@
 package com.punnybankers.circles_backend.services;
 
 
+import com.punnybankers.circles_backend.models.UserRequest;
 import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.repositories.entities.Status;
 import com.punnybankers.circles_backend.repositories.entities.User;
+import com.punnybankers.circles_backend.repositories.entities.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,5 +40,22 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public User registerUser(UserRequest userRequest) {
+        User user = User.builder()
+                .firstName(userRequest.getFirstName())
+                .lastName(userRequest.getLastName())
+                .username(userRequest.getUsername())
+                .email(userRequest.getEmail())
+                .dateOfBirth(userRequest.getDateOfBirth())
+                .password(userRequest.getPassword())
+                .mobile(userRequest.getMobile())
+                .role(UserRole.valueOf(userRequest.getRole().toUpperCase()))
+                .kycStatus(Status.PENDING)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+        return userRepository.save(user);
     }
 }
