@@ -6,6 +6,7 @@ import com.punnybankers.circles_backend.repositories.UserRepository;
 import com.punnybankers.circles_backend.repositories.entities.Status;
 import com.punnybankers.circles_backend.repositories.entities.User;
 import com.punnybankers.circles_backend.repositories.entities.UserRole;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public User registerUser(UserRequest userRequest) {
         User user = User.builder()
                 .firstName(userRequest.getFirstName())
