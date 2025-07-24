@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FounderProfileRequest {
-    private UUID userId;
+    private String token;
     private String businessName;
     private String businessDetails;
     private String pitchUrl;

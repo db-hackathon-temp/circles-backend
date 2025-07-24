@@ -1,5 +1,6 @@
 package com.punnybankers.circles_backend.services;
 
+import com.punnybankers.circles_backend.controllers.UserController;
 import com.punnybankers.circles_backend.models.SharkProfileRequest;
 import com.punnybankers.circles_backend.repositories.SharkProfileRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
@@ -15,16 +16,19 @@ public class SharkProfileService {
     private final SharkProfileRepository sharkRepo;
     private final UserRepository userRepo;
 
-    public SharkProfileService(SharkProfileRepository sharkRepo, UserRepository userRepo) {
+    private final UserController userController;
+
+    public SharkProfileService(SharkProfileRepository sharkRepo, UserRepository userRepo, UserController userController) {
         this.sharkRepo = sharkRepo;
         this.userRepo = userRepo;
+        this.userController = userController;
     }
 
     @Transactional
     public SharkProfile createSharkProfile(SharkProfileRequest req) {
-        User user = userRepo.findById(req.getUserId())
+        String username = userController.getUsername(req.getToken());
+        User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
         SharkProfile profile = SharkProfile.builder()
                 .user(user)
                 .monthlyCommitment(req.getMonthlyCommitment())

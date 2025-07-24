@@ -1,5 +1,6 @@
 package com.punnybankers.circles_backend.services;
 
+import com.punnybankers.circles_backend.controllers.UserController;
 import com.punnybankers.circles_backend.models.FounderProfileRequest;
 import com.punnybankers.circles_backend.repositories.FounderProfileRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
@@ -15,14 +16,18 @@ public class FounderProfileService {
     private final FounderProfileRepository founderRepo;
     private final UserRepository userRepo; // Assume you have this
 
-    public FounderProfileService(FounderProfileRepository founderRepo, UserRepository userRepo) {
+    private final UserController userController;
+
+    public FounderProfileService(FounderProfileRepository founderRepo, UserRepository userRepo, UserController userController) {
         this.founderRepo = founderRepo;
         this.userRepo = userRepo;
+        this.userController = userController;
     }
 
     @Transactional
     public FounderProfile createFounderProfile(FounderProfileRequest req) {
-        User user = userRepo.findById(req.getUserId())
+        String username = userController.getUsername(req.getToken());
+        User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         FounderProfile profile = FounderProfile.builder()
