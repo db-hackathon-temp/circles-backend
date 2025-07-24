@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Circle {
 
     @Id
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "circle_id", nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "name")

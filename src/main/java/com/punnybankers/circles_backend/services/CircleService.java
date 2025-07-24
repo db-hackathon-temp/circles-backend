@@ -2,11 +2,14 @@ package com.punnybankers.circles_backend.services;
 
 
 import com.punnybankers.circles_backend.repositories.CircleRepository;
+import com.punnybankers.circles_backend.repositories.ContributionRepository;
 import com.punnybankers.circles_backend.repositories.entities.Circle;
+import com.punnybankers.circles_backend.repositories.entities.Contribution;
 import com.punnybankers.circles_backend.repositories.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,6 +20,11 @@ public class CircleService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ContributionRepository contributionRepository;
+
+
 
     public Optional<Circle> findById(UUID circleId) {
         return circleRepository.findById(circleId);
@@ -60,5 +68,24 @@ public class CircleService {
 
         return true;
     }
+
+    public void contribute(String userName, UUID circleId) {
+        Optional<User> user = Optional.ofNullable(userService.findByUsername(userName));
+        if (user.isPresent()) {
+            Optional<Circle> circle = findById(circleId);
+            if (circle.isPresent()) {
+                Contribution contribution = Contribution.builder()
+                        .circle(circle.get())
+                        .month(LocalDateTime.now().getMonth())
+                        .amount(circle.get().getMonthlyContribution())
+                        .payoutDate(LocalDateTime.now())
+                        .status("Paid")
+                        .build();
+                contributionRepository.save(contribution);
+            }
+        }
+
+    }
+
 
 }

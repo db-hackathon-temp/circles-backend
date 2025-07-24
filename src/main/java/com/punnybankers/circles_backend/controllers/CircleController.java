@@ -1,7 +1,5 @@
 package com.punnybankers.circles_backend.controllers;
 
-import com.punnybankers.circles_backend.repositories.entities.Circle;
-import com.punnybankers.circles_backend.repositories.entities.User;
 import com.punnybankers.circles_backend.services.CircleService;
 import com.punnybankers.circles_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +8,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/circle")
+@RequestMapping("/api/circle")
 public class CircleController {
 
     @Autowired
@@ -43,4 +41,16 @@ public class CircleController {
             return ResponseEntity.status(404).body("Circle or User not found");
         }
     }
+
+
+    @PostMapping("/contribute")
+    public ResponseEntity<?> contribute(@RequestParam String username, @RequestParam UUID circleId) {
+        circleService.contribute(username, circleId);
+        return ResponseEntity.status(201).body("Contribution saved");
+    }
+
+    /*@GetMapping("/contributions")
+    public ResponseEntity<?> getContributions(@RequestParam String username) {
+        return ResponseEntity.status(401).body("Invalid or expired token");
+    }*/
 }
