@@ -8,6 +8,7 @@ import com.punnybankers.circles_backend.repositories.ContributionRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
 import com.punnybankers.circles_backend.repositories.entities.Circle;
 import com.punnybankers.circles_backend.repositories.entities.Contribution;
+import com.punnybankers.circles_backend.repositories.entities.Notification;
 import com.punnybankers.circles_backend.repositories.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class CircleService {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private NotificationService notificationService;
 
     public List<Circle> getAllCirclesByToken(String token) {
         String username = userController.getUsername(token);
@@ -66,7 +70,12 @@ public class CircleService {
                 .status("ACTIVE")
                 .createdAt(LocalDateTime.now())
                 .build();
-
+        Notification notification = Notification.builder()
+                .message("Circle created successfully!")
+                .username(username)
+                .isRead(false)
+                .build();
+        notificationService.saveNotification(notification);
         return circleRepository.save(circle);
     }
 
@@ -90,6 +99,13 @@ public class CircleService {
 
         circle.setShark(sharkUser);
         circleRepository.save(circle);
+
+        Notification notification = Notification.builder()
+                .message("You are now added to the circle - " + circle.getName())
+                .username(sharkUser.getUsername())
+                .isRead(false)
+                .build();
+        notificationService.saveNotification(notification);
         return true;
     }
 
@@ -110,6 +126,12 @@ public class CircleService {
         circleRepository.save(circle);
         userService.save(memberUser);
 
+        Notification notification = Notification.builder()
+                .message("You are now added to the circle - " + circle.getName())
+                .username(memberUser.getUsername())
+                .isRead(false)
+                .build();
+        notificationService.saveNotification(notification);
         return true;
     }
 
