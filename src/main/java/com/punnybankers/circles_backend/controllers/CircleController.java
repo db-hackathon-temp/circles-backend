@@ -2,6 +2,7 @@ package com.punnybankers.circles_backend.controllers;
 
 import com.punnybankers.circles_backend.models.CircleRequest;
 import com.punnybankers.circles_backend.repositories.entities.Circle;
+import com.punnybankers.circles_backend.repositories.entities.Contribution;
 import com.punnybankers.circles_backend.services.CircleService;
 import com.punnybankers.circles_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Month;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,7 +76,22 @@ public class CircleController {
 
     @GetMapping("/contributions")
     public ResponseEntity<?> getContributionsForCircle(@RequestParam UUID circleId) {
+        try {
+            List<Contribution> contributions = circleService.getAllContributionsForCircle(circleId);
+            return ResponseEntity.ok(contributions);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid circle id or no contributions for circle");
+        }
+    }
 
-        return ResponseEntity.status(401).body("Invalid or expired token");
-    }*/
+    @GetMapping("/contributionsByMonth")
+    public ResponseEntity<?> getContributionsForCircleUserAndMonth(@RequestParam UUID circleId,  @RequestParam Month month, @RequestParam String username) {
+        try {
+            Contribution contribution = circleService.getContributionForCircleUserAndMonth(circleId, username, month);
+            return ResponseEntity.ok(contribution);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid token or user not found");
+        }
+    }
+
 }

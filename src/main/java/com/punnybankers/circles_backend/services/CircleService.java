@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -183,6 +184,10 @@ public class CircleService {
 
     public List<Contribution> getAllContributionsForCircle(UUID circleId) {
         return new ArrayList<>(contributionRepository.findAllByCircleId(circleId));
+    }
+
+    public Contribution getContributionForCircleUserAndMonth(UUID circleId, String userName,  Month month) {
+        return contributionRepository.findByCircleIdAndUserNameAndContributionMonth(circleId, userName, month);
     }
 
 }
