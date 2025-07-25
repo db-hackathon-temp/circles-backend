@@ -7,9 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -48,10 +46,13 @@ public class Circle {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Column(name = "payout_date")
+    private Integer payoutDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "shark_id")
     private User shark;
 
     @ManyToMany(mappedBy = "circles")
-    private Set<User> members = new HashSet<>();
+    private List<User> members = new ArrayList<>();
 }

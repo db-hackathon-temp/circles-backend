@@ -72,8 +72,9 @@ public class CircleController {
         return ResponseEntity.status(201).body("Contribution saved");
     }
 
-    /*@GetMapping("/contributions")
-    public ResponseEntity<?> getContributions(@RequestParam String username) {
+    @GetMapping("/contributions")
+    public ResponseEntity<?> getContributionsForCircle(@RequestParam UUID circleId) {
+
         return ResponseEntity.status(401).body("Invalid or expired token");
     }*/
 }

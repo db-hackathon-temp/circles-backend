@@ -5,11 +5,9 @@ import com.punnybankers.circles_backend.controllers.UserController;
 import com.punnybankers.circles_backend.models.CircleRequest;
 import com.punnybankers.circles_backend.repositories.CircleRepository;
 import com.punnybankers.circles_backend.repositories.ContributionRepository;
+import com.punnybankers.circles_backend.repositories.PayoutRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
-import com.punnybankers.circles_backend.repositories.entities.Circle;
-import com.punnybankers.circles_backend.repositories.entities.Contribution;
-import com.punnybankers.circles_backend.repositories.entities.Notification;
-import com.punnybankers.circles_backend.repositories.entities.User;
+import com.punnybankers.circles_backend.repositories.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,9 @@ public class CircleService {
 
     @Autowired
     private ContributionRepository contributionRepository;
+
+    @Autowired
+    private PayoutRepository payoutRepository;
 
     @Autowired
     private UserController userController;
@@ -66,6 +67,7 @@ public class CircleService {
                 .monthlyContribution(request.getMonthlyContribution())
                 .maxMembers(request.getMaxMembers())
                 .createdBy(createdByUser)
+                .payoutDate(request.getPayoutDate())
                 .shark(sharkUser)
                 .status("ACTIVE")
                 .createdAt(LocalDateTime.now())
@@ -144,7 +146,7 @@ public class CircleService {
                         .circle(circle.get())
                         .contributionMonth(LocalDateTime.now().getMonth())
                         .amount(circle.get().getMonthlyContribution())
-                        .payoutDate(LocalDateTime.now())
+                        .paymentDate(LocalDateTime.now())
                         .status("Paid")
                         .build();
                 contributionRepository.save(contribution);
@@ -153,5 +155,34 @@ public class CircleService {
 
     }
 
+    public List<Circle> getAllCircles() {
+        return new ArrayList<>(circleRepository.findAll());
+    }
+
+    public void payout(String userName, UUID circleId, Long amount) {
+        Optional<User> winner = Optional.ofNullable(userService.findByUsername(userName));
+        if (winner.isPresent()) {
+            Optional<Circle> circle = findById(circleId);
+            if (circle.isPresent()) {
+                Payouts payout = Payouts.builder()
+                        .circle(circle.get())
+                        .payoutMonth(LocalDateTime.now().getMonth())
+                        .amount(amount)
+                        .payoutDate(LocalDateTime.now())
+                        .status("Paid")
+                        .winner(winner.get())
+                        .build();
+                payoutRepository.save(payout);
+            }
+        }
+    }
+
+    public List<Payouts> getAllPayoutsForCircle(UUID circleId) {
+        return new ArrayList<>(payoutRepository.findByCircleId(circleId));
+    }
+
+    public List<Contribution> getAllContributionsForCircle(UUID circleId) {
+        return new ArrayList<>(contributionRepository.findAllByCircleId(circleId));
+    }
 
 }

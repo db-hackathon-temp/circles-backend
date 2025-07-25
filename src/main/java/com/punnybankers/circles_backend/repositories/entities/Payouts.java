@@ -15,12 +15,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "contribution")
-public class Contribution {
+@Table(name = "payouts")
+public class Payouts {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "contri_id", unique = true, nullable = false)
+    @Column(name = "payout_id", unique = true, nullable = false)
     private UUID id;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -29,10 +29,10 @@ public class Contribution {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User winner;
 
-    @Column(name = "contribution_month")
-    private Month contributionMonth;
+    @Column(name = "payout_month")
+    private Month payoutMonth;
 
     @Column(name = "amount")
     private Long amount;
@@ -40,7 +40,7 @@ public class Contribution {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "payment_date")
-    private LocalDateTime paymentDate;
+    @Column(name = "payout_date")
+    private LocalDateTime payoutDate;
 }
 

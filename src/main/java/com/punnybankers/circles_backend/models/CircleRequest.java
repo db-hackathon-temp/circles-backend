@@ -13,4 +13,5 @@ public class CircleRequest {
     private Integer maxMembers;
     private String createdByToken;
     private UUID sharkId;
+    private Integer payoutDate;
 }
