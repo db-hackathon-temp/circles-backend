@@ -4,12 +4,15 @@ import com.punnybankers.circles_backend.controllers.UserController;
 import com.punnybankers.circles_backend.models.SharkProfileRequest;
 import com.punnybankers.circles_backend.repositories.SharkProfileRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.repositories.entities.FounderProfile;
 import com.punnybankers.circles_backend.repositories.entities.SharkProfile;
 import com.punnybankers.circles_backend.repositories.entities.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SharkProfileService {
@@ -42,5 +45,9 @@ public class SharkProfileService {
                 .build();
 
         return sharkRepo.save(profile);
+    }
+
+    public List<SharkProfile> getAllSharks() {
+        return new ArrayList<>(sharkRepo.findAll());
     }
 }

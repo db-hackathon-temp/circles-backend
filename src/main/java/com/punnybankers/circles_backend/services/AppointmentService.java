@@ -5,9 +5,11 @@ import com.punnybankers.circles_backend.repositories.entities.Appointment;
 import com.punnybankers.circles_backend.repositories.entities.User;
 import com.punnybankers.circles_backend.repositories.AppointmentRepository;
 import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.repositories.entities.UserRole;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,5 +42,14 @@ public class AppointmentService {
 
     public Optional<Appointment> getAppointment(UUID id) {
         return appointmentRepo.findById(id);
+    }
+
+    public List<Appointment> getAllAppointments(String username) {
+        User user = userRepo.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        if (user.getRole() == UserRole.FOUNDER) {
+            return appointmentRepo.findAllByFounderUser(user);
+        } else {
+            return appointmentRepo.findAllBySharkUser(user);
+        }
     }
 }

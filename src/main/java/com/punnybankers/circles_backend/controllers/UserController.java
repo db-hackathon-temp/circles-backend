@@ -45,6 +45,11 @@ public class UserController {
         return ResponseEntity.status(401).body("Invalid or expired token");
     }
 
+    @GetMapping("/usersByRole/{role}")
+    public ResponseEntity<?> getUserDetailsByRoles(@RequestParam("role") String role) {
+        return ResponseEntity.ok(userService.findAllUserByRole(role));
+    }
+
     public String getUsername(String token) {
         if (jwtUtil.validateToken(token)) {
             return jwtUtil.extractUsername(token);
