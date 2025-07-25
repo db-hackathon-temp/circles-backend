@@ -36,4 +36,16 @@ public class FounderProfileController {
         }
     }
 
+    @GetMapping("/score")
+    public ResponseEntity<?> getFounderScore(@RequestBody FounderProfileRequest request) {
+        try {
+            Integer score = founderProfileService.generateFounderScore(request);
+            return ResponseEntity.ok(score);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Invalid circle id or no contributions for circle");
+        }
+    }
+
+
+
 }

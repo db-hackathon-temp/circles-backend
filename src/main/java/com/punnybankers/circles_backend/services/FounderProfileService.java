@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -49,5 +50,25 @@ public class FounderProfileService {
 
     public List<FounderProfile> getAllFounders() {
         return new ArrayList<>(founderRepo.findAll());
+    }
+
+    public Integer generateFounderScore(FounderProfileRequest req) {
+        // Simple heuristic as placeholder for LLaMA AI scoring
+        List<String> positiveKeywords = Arrays.asList("innovative", "trusted", "reliable", "transparent", "secure");
+        int keywordCount = 0;
+        String business = req.getBusinessName();
+        String businessDetails = req.getBusinessDetails();
+        String combined = (business + " " + businessDetails).toLowerCase();
+        for (String kw : positiveKeywords) {
+            if (combined.contains(kw)) keywordCount++;
+        }
+
+        Integer baseScore = 50;
+        Integer lengthScore = (int) Math.min((business.length() + businessDetails.length()) / 10.0, 40);
+        Integer keywordScore = keywordCount * 10;
+
+        Integer total = baseScore + lengthScore + keywordScore;
+        return Math.min(total, 100);
+
     }
 }
