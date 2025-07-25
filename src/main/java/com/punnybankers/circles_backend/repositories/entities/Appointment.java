@@ -1,7 +1,7 @@
 package com.punnybankers.circles_backend.repositories.entities;
 
+import jakarta.persistence.*;
 import lombok.*;
-import javax.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
 
