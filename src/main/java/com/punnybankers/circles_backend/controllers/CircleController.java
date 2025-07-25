@@ -3,14 +3,11 @@ package com.punnybankers.circles_backend.controllers;
 import com.punnybankers.circles_backend.models.CircleRequest;
 import com.punnybankers.circles_backend.repositories.entities.Circle;
 import com.punnybankers.circles_backend.repositories.entities.Contribution;
+import com.punnybankers.circles_backend.models.CircleResponse;
 import com.punnybankers.circles_backend.services.CircleService;
 import com.punnybankers.circles_backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Month;
@@ -30,7 +27,7 @@ public class CircleController {
     @GetMapping("/all")
     public ResponseEntity<?> getUserCircles(@RequestHeader("Authorization") String token) {
         try {
-            List<Circle> circles = circleService.getAllCirclesByToken(token);
+            List<CircleResponse> circles = circleService.getAllCirclesByToken(token);
             return ResponseEntity.ok(circles);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Invalid token or user not found");
@@ -40,7 +37,7 @@ public class CircleController {
     @PostMapping("/create")
     public ResponseEntity<?> createCircle(@RequestBody CircleRequest request) {
         try {
-            Circle circle = circleService.createCircle(request);
+            CircleResponse circle = circleService.createCircle(request);
             return ResponseEntity.status(201).body(circle);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -7,9 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -72,10 +71,6 @@ public class User {
     @OneToOne(mappedBy = "shark")
     private Circle sharkCircle;
 
-    @ManyToMany
-    @JoinTable(
-            name = "circle_membership",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "circle_id"))
-    private Set<Circle> circles = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserCircleEntity> userCircleEntities = new ArrayList<>();
 }

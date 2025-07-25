@@ -1,9 +1,6 @@
 package com.punnybankers.circles_backend.util;
 
-import com.punnybankers.circles_backend.repositories.entities.Circle;
-import com.punnybankers.circles_backend.repositories.entities.Notification;
-import com.punnybankers.circles_backend.repositories.entities.Payouts;
-import com.punnybankers.circles_backend.repositories.entities.User;
+import com.punnybankers.circles_backend.repositories.entities.*;
 import com.punnybankers.circles_backend.services.CircleService;
 import com.punnybankers.circles_backend.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +31,16 @@ public class PayoutJob {
                 User winner = pickWinner(circle);
                 if (winner != null) {
                     circleService.payout(winner.getUsername(), circle.getId(), Long.valueOf(1000));
-                    for (User member : circle.getMembers()) {
+                    for (UserCircleEntity uc : circle.getUserCircleEntities()) {
+                        User member = uc.getUser();
+
                         Notification notification = Notification.builder()
-                                .message("Winner for this month for circle - " + circle.getName() + " is " + winner.getUsername())
+                                .message("Winner for this month for circle - " + circle.getName()
+                                        + " is " + winner.getUsername())
                                 .username(member.getUsername())
                                 .isRead(false)
                                 .build();
+
                         notificationService.saveNotification(notification);
                     }
                     if (null != circle.getShark()) {
@@ -59,7 +60,11 @@ public class PayoutJob {
 
     private User pickWinner(Circle circle){
         List<Payouts> payouts = circleService.getAllPayoutsForCircle(circle.getId());
-        if (payouts.size() < circle.getMembers().size()){
+        List<User> allMembers = circle.getUserCircleEntities().stream()
+                .map(UserCircleEntity::getUser)
+                .toList();
+
+        if (payouts.size() < allMembers.size()){
 
             //User winner = payoutUtil.pickRandomFounder(circle);
             List <User> remainingFounders = new ArrayList<User>();
@@ -68,7 +73,7 @@ public class PayoutJob {
                 payoutDone.add(payout.getWinner());
             }
 
-            for (User member : circle.getMembers()) {
+            for (User member : allMembers) {
                 if (!payoutDone.contains(member)){
                     remainingFounders.add(member);
                 }

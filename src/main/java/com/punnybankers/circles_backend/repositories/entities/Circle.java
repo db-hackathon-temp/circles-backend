@@ -53,6 +53,6 @@ public class Circle {
     @JoinColumn(name = "shark_id")
     private User shark;
 
-    @ManyToMany(mappedBy = "circles")
-    private List<User> members = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "circle")
+    private List<UserCircleEntity> userCircleEntities = new ArrayList<>();
 }

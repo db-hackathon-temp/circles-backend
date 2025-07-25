@@ -2,11 +2,10 @@ package com.punnybankers.circles_backend.services;
 
 
 import com.punnybankers.circles_backend.controllers.UserController;
+import com.punnybankers.circles_backend.mappers.CircleMapper;
 import com.punnybankers.circles_backend.models.CircleRequest;
-import com.punnybankers.circles_backend.repositories.CircleRepository;
-import com.punnybankers.circles_backend.repositories.ContributionRepository;
-import com.punnybankers.circles_backend.repositories.PayoutRepository;
-import com.punnybankers.circles_backend.repositories.UserRepository;
+import com.punnybankers.circles_backend.models.CircleResponse;
+import com.punnybankers.circles_backend.repositories.*;
 import com.punnybankers.circles_backend.repositories.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +29,9 @@ public class CircleService {
     private ContributionRepository contributionRepository;
 
     @Autowired
+    private UserCircleRepository userCircleRepository;
+
+    @Autowired
     private PayoutRepository payoutRepository;
 
     @Autowired
@@ -41,15 +43,19 @@ public class CircleService {
     @Autowired
     private NotificationService notificationService;
 
-    public List<Circle> getAllCirclesByToken(String token) {
+    public List<CircleResponse> getAllCirclesByToken(String token) {
         String username = userController.getUsername(token);
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new ArrayList<>(user.getCircles());
+        return user.getUserCircleEntities()
+                .stream()
+                .map(UserCircleEntity::getCircle)
+                .map(CircleMapper::mapToCircleResponse)
+                .toList();
     }
 
-    public Circle createCircle(CircleRequest request) {
+    public CircleResponse createCircle(CircleRequest request) {
         String username = userController.getUsername(request.getCreatedByToken());
         User createdByUser = userRepo.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -78,8 +84,14 @@ public class CircleService {
                 .username(username)
                 .isRead(false)
                 .build();
+        UserCircleEntity membership = UserCircleEntity.builder()
+                .user(createdByUser)
+                .circle(circle)
+                .build();
         notificationService.saveNotification(notification);
-        return circleRepository.save(circle);
+        Circle created_circle = circleRepository.save(circle);
+        userCircleRepository.save(membership);
+        return CircleMapper.mapToCircleResponse(circle);
     }
 
     public Optional<Circle> findById(UUID circleId) {
@@ -123,8 +135,15 @@ public class CircleService {
         Circle circle = circleOpt.get();
         User memberUser = userOpt.get();
 
-        circle.getMembers().add(memberUser);
-        memberUser.getCircles().add(circle);
+        UserCircleEntity userCircle = UserCircleEntity.builder()
+                .user(memberUser)
+                .circle(circle)
+                .build();
+
+        userCircleRepository.save(userCircle);
+
+        circle.getUserCircleEntities().add(userCircle);
+        memberUser.getUserCircleEntities().add(userCircle);
 
         circleRepository.save(circle);
         userService.save(memberUser);
