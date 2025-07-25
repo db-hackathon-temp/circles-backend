@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class FounderProfileService {
@@ -43,4 +44,9 @@ public class FounderProfileService {
 
         return founderRepo.save(profile);
     }
+    public FounderProfile getFounderProfileById(UUID id) {
+        return founderRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Founder not found with id: " + id));
+    }
+
 }

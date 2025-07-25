@@ -6,6 +6,8 @@ import com.punnybankers.circles_backend.services.FounderProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/founder/profile")
 public class FounderProfileController {
@@ -20,5 +22,10 @@ public class FounderProfileController {
     public ResponseEntity<FounderProfile> createFounderProfile(@RequestBody FounderProfileRequest request) {
         FounderProfile created = founderProfileService.createFounderProfile(request);
         return ResponseEntity.ok(created);
+    }
+    @GetMapping("/{user_id}")
+    public ResponseEntity<FounderProfile> getFounderProfile(@PathVariable("user_id") UUID id) {
+        FounderProfile profile = founderProfileService.getFounderProfileById(id);
+        return ResponseEntity.ok(profile);
     }
 }
