@@ -73,4 +73,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserCircleEntity> userCircleEntities = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private Contribution contribution;
 }

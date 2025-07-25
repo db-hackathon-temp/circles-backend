@@ -81,14 +81,14 @@ public class CircleController {
         }
     }
 
-    @GetMapping("/contributionsByMonth")
-    public ResponseEntity<?> getContributionsForCircleUserAndMonth(@RequestParam UUID circleId,  @RequestParam Month month, @RequestParam String username) {
-        try {
-            Contribution contribution = circleService.getContributionForCircleUserAndMonth(circleId, username, month);
-            return ResponseEntity.ok(contribution);
-        } catch (Exception e) {
-            return ResponseEntity.status(401).body("Invalid token or user not found");
-        }
-    }
+//    @GetMapping("/contributionsByMonth")
+//    public ResponseEntity<?> getContributionsForCircleUserAndMonth(@RequestParam UUID circleId,  @RequestParam Month month, @RequestParam String username) {
+//        try {
+//            Contribution contribution = circleService.getContributionForCircleUserAndMonth(circleId, username, month);
+//            return ResponseEntity.ok(contribution);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(401).body("Invalid token or user not found");
+//        }
+//    }
 
 }

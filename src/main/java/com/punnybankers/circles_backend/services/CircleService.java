@@ -205,8 +205,8 @@ public class CircleService {
         return new ArrayList<>(contributionRepository.findAllByCircleId(circleId));
     }
 
-    public Contribution getContributionForCircleUserAndMonth(UUID circleId, String userName,  Month month) {
-        return contributionRepository.findByCircleIdAndUserNameAndContributionMonth(circleId, userName, month);
-    }
+//    public Contribution getContributionForCircleUserAndMonth(UUID circleId, String userName,  Month month) {
+//        return contributionRepository.findByCircleIdAndUserNameAndContributionMonth(circleId, userName, month);
+//    }
 
 }

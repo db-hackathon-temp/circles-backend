@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface ContributionRepository extends JpaRepository<Contribution, UUID> {
     List<Contribution> findAllByCircleId(UUID circleId);
-    Contribution findByCircleIdAndUserNameAndContributionMonth(UUID circleId, String userName, Month month);
+//    Contribution findByCircleIdAndUserNameAndContributionMonth(UUID circleId, String userName, Month month);
 }
